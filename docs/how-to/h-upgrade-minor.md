@@ -27,6 +27,14 @@ The concurrency with other operations is not supported, and it can lead the clus
 7. (optional) **Scale back**: Remove no longer necessary K8s units created in step 2 (if any).
 8. **Post-upgrade check**: Make sure all units are in the proper state and the cluster is healthy.
 
+[note type="caution"]
+Due to a bug, refreshing from revision prior to 814 to newer revision cannot happen in a rolling fashion, causing some downtime.
+All units will be refreshed at once and the `resume` step is skipped.
+
+Technical details can be found in the [Pull Request #106](https://github.com/canonical/mysql-router-operators/pull/106). 
+
+[/note]
+
 ## Step 1: Collect
 [note]
 This step is only valid when deploying from charmhub. If the deployment is of a local charm (revision is small, e.g. 0-10), make sure you save a copy of the current  `.charm` file BEFORE going further. You might need it for rollback.
@@ -146,6 +154,14 @@ mysql-test-app/0*    active       idle   10.1.12.57
 ## Step 6: Rollback (optional)
 
 If the upgrade was incompatible, it’s important to roll back the charm to a previous revision so that an update can be later attempted after a further inspection of the failure. See the [minor rollback](/t/12239) guide.
+
+[note type="caution"]
+**Warning:** rollback is only possible between revisions that implement the same refresh behavior.
+
+Refresh V2: revisions 069 - 813
+
+Refresh V3: revisions 814+
+[/note]
 
 ## Step 7: Scale-back
 

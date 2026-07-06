@@ -2,7 +2,14 @@
 
 In-place upgrades/rollbacks are not possible for major versions.
 
-> Canonical is not planning to support in-place upgrades for major version change. The new MySQL Router charm will have to be installed nearby, and the data will be copied from the old to the new installation. After announcing the next MySQL major version support, the appropriate documentation for data migration will be published.
+[note type="caution"]
+Due to a bug in mysql-router-k8s charm, refreshing from revision prior to 814 to newer revision cannot happen in a rolling fashion, causing some downtime.
+All units will be refreshed at once and the `resume` step is skipped.
+
+Technical details can be found in the [Pull Request #106](https://github.com/canonical/mysql-router-operators/pull/106). 
+
+[/note]
+
 
 For instructions on carrying out **minor version upgrades**, see the following guides:
 * [Minor upgrade](/t/12238), e.g. MySQL Router 8.0.33 -> MySQL Router 8.0.34<br/>

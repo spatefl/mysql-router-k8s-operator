@@ -1,11 +1,12 @@
 # Minor Rollback
 
-> :information_source: **Example**: MySQL Router 8.0.34 -> MySQL Router 8.0.33<br/>
-(including simple charm revision bump: from revision 43 to revision 42)
+> :information_source: **Example**: MySQL Router 8.0.34 → MySQL Router 8.0.33
+> (including simple charm revision bump: from revision 43 to revision 42)
 
 > **:warning: WARNING**: do NOT trigger `rollback` during the **running** `upgrade` action! It may cause unpredictable MySQL Cluster and/or MySQL Router state!
 
 ## Minor rollback steps
+
 1. **Rollback**. Perform the charm rollback using `juju refresh`. The unit with the maximal ordinal will be rolled back first, and the rollback will continue for the entire application.
 2. **Check**. Make sure the charm and cluster are in healthy state again.
 
@@ -17,6 +18,14 @@ Although the underlying MySQL Cluster and MySQL Router continue to work, it’s 
 
 To execute a rollback we take the same procedure as the upgrade, the difference being the charm revision to upgrade to. In case of this tutorial example, one would refresh the charm back to revision `88`, the steps being:
 
+[note type="caution"]
+**Warning:** rollback is only possible between revisions that implement the same refresh behavior.
+
+Refresh V2: revisions 069 - 813
+
+Refresh V3: revisions 814+
+[/note]
+
 ## Step 1: Rollback
 
 When using the charm from charmhub:
@@ -25,15 +34,17 @@ When using the charm from charmhub:
 juju refresh mysql-router-k8s --revision=88 --trust
 ```
 
-When deploying from a local charm file, you need to have the previous revision's `.charm` file and the `mysql-image` resource. Then, run:
+When deploying from a local charm file, you need to have the previous revision’s `.charm` file and the `mysql-image` resource. Then, run:
 
 ```shell
 juju refresh mysql-router-k8s --trust --path=<path_to_charm_file> \
        --resource mysql-router-image=<image>
 ```
-The resource reference can be found under the `upstream-source` key in the charm's `metadata.yaml` file. You can access this file by:
+
+The resource reference can be found under the `upstream-source` key in the charm’s `metadata.yaml` file. You can access this file by:
+
 * Simply unpacking the `.charm` file
-* Finding the corresponding [release](https://github.com/canonical/mysql-router-k8s-operator/releases) in the charm's GitHub repository and navigating to `metadata.yaml`.
+* Finding the corresponding [release](https://github.com/canonical/mysql-router-k8s-operator/releases) in the charm’s GitHub repository and navigating to `metadata.yaml`.
 
 After the refresh command, the `juju` controller revision for the application will be back in sync with the running MySQL Router K8s revision.
 
